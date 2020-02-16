@@ -63,7 +63,7 @@ def get_image_list(request_url):
     requests.head("user-agent",
                   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36")
     '''
-    response = requests.get(request_url)
+    response = requests.get(request_url, headers=gen_request_headers())
     full_doc_str = response.text
     reg = r'data-original="(.*?)".*?alt="(.*?)"'
     reg = re.compile(reg, re.S)
