@@ -18,11 +18,11 @@ file_sqlite3_location = "doutula_images_data.db"
 # 创建待解析的地址: 3253
 def gen_all_page_url(start_page, total_page):
     page_continue = 0
-    # print("开始页数：%d，总页数：%d" % (start_page, total_page))
+    print("开始页数：%d，总页数：%d" % (start_page, total_page))
     log_kit_info("开始页数：%d，总页数：%d" % (start_page, total_page))
     for i in range(start_page, total_page + 1):
         url = base_url_template % i
-        # print("执行地址：%s" % url)
+        print("执行地址：%s" % url)
         log_kit_info("解析地址：%s" % url)
         try:
             get_image_list(url)
@@ -30,7 +30,7 @@ def gen_all_page_url(start_page, total_page):
             log_kit_error("get_image_list运行时错误: %s" % e)
         except Exception as e:
             log_kit_error("get_image_list未意料的错误,程序将重新执行: %s" % e)
-            requests.get("http://192.168.1.20:8000/bee?page=%d" % i, timeout=3)
+            # requests.get("http://192.168.1.20:8000/bee?page=%d" % i, timeout=3)
             page_continue = i
             break
             # sys.exit(0)
@@ -39,22 +39,25 @@ def gen_all_page_url(start_page, total_page):
         gen_all_page_url(page_continue, total_page)
     else:
         log_kit_info("解析完成，总页数 %d" % total_page)
-        requests.get("http://192.168.1.20:8000/bee?page=%d" % total_page, timeout=3)
+        # requests.get("http://192.168.1.20:8000/bee?page=%d" % total_page, timeout=3)
+
 
 # 定义request请求头
 def gen_request_headers():
     headers = {
-               "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+               "accept": "text/html,application/xhtml+xml,application/xml;"
+                         "q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                "accept-encoding": "gzip, deflate, br",
                "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-               "cookie": "__cfduid=dd72271289a7e43f0c53634ce58f5dcc81581768918; UM_distinctid=17048c6494371f-04db5b8b04fb4a-b383f66-240000-17048c64944a4f; _agep=1581768933; _agfp=62f2eba8bc924ae93ec305bea3807c7c; _agtk=c23502c61f13407c334be673eac64f91; XSRF-TOKEN=eyJpdiI6ImgwNDVIbUhrbXVsNFJFcmtwRmJcL2VnPT0iLCJ2YWx1ZSI6Ik1INjF6Vmc1cGRhdmR5UXFQQnQ0S05WY2hMMmRaN2JESXJYeTQwTE1JdVIxZmVjREhyOVA3SitIRlJKd1F0UCsiLCJtYWMiOiI4NjI1N2M5ODc3MjE3ZTkxZGY4YWExMWEzNTc2M2IwMWNiZDFlMzAzN2E5MzYwMjM0ODAzOWM5MWRjZmZiMWMwIn0%3D; doutula_session=eyJpdiI6Ink2ZXdCb28rK2h2d0lzNDBCZjNLUXc9PSIsInZhbHVlIjoibEFoQWZLVXJDcUVZRVU1K096VjViTjZqV1VXMzliZkFwYjNvWitxMjJ4QVwvTndFU29oUHJydCtEdHlOTGo1ZXUiLCJtYWMiOiJlZWZjNWNhNjZlMjMzY2UyNjMyM2UyYjM4MzU0YTY3ZDU4YmNkZDljYzI0NDQzZjFlODY1Mjc4ZDQzY2U2YmVmIn0%3D; CNZZDATA1256911977=1150902186-1581767224-%7C1581832394",
+               "cookie": "XSRF-TOKEN=eyJpdiI6IjRNWGx5MnhEMTdNUVhacmtSdnE2Mmc9PSIsInZhbHVlIjoiUWVDcDd1SG9Ud3QrdmZKODhPZFRrVW1uRDZCMTA4M0QyZmZaUllvQmtyWkhjQnVvcVhYTjRGYTFWTDNwU2ptNSIsIm1hYyI6Ijk4MWU4NzFhZjJjYmQ4MGU2MDgzZDY1OGU2YTI0MGZjM2Y0OGE5M2ZkYjkzODQzYWRhN2Q4N2M5ZDZjMDYzOTkifQ%3D%3D; doutula_session=eyJpdiI6IkJvZmRHakFcL09Ec1ZlUWNGZVl6d2pnPT0iLCJ2YWx1ZSI6Imk2UVYwQldqT0RBXC9Oemc5R2NyeVBtSktIMGtkOWtqdHFCWFRwZkFaUmFxRk9YbXp4aEEyQlwvcHZuVlM1RFN4XC8iLCJtYWMiOiIwZWNmM2U4MjY4ZWZjODVjZWVhZGVmYzdkYTY2ZDA5ODJiOTQ2MTM0ZmZiMTYyMTA1YjVjZWJjY2ZlNTIwZTUwIn0%3D; Hm_lvt_2fc12699c699441729d4b335ce117f40=1595661921; Hm_lpvt_2fc12699c699441729d4b335ce117f40=1595661921; _agep=1595661921; _agfp=28e31787fe6eec19ff4ab2a7a8aad210; _agtk=7945fc9b3d862ef02d206a327eda802a",
                "dnt": "1",
                "referer": "http://www.doutula.com/photo/list/?page=1",
                "sec-fetch-mode": "navigate",
                "sec-fetch-site": "same-origin",
                "sec-fetch-user": "?1",
                "upgrade-insecure-requests": "1",
-               "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
+               "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) "
+                             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
                }
     return headers
 
@@ -95,9 +98,14 @@ def get_mysql_connect():
 def create_tables():
     conn = get_mysql_connect()
     cursor = conn.cursor()
-    create_table_script = 'CREATE TABLE if not exists "store_resource_image" ("image_id" INTEGER NOT NULL ON CONFLICT ABORT PRIMARY KEY AUTOINCREMENT,"image_alt" TEXT(128),"image_tags" TEXT(255),"image_org_url" TEXT(255),"image_thumb_nail_url" TEXT(255),"image_category_id" TEXT(20),"image_state" TEXT(3) );'
+    create_table_script = \
+        'CREATE TABLE if not exists ' \
+        '"store_resource_image" ("image_id" INTEGER NOT NULL ON CONFLICT ABORT PRIMARY KEY AUTOINCREMENT,' \
+        '"image_alt" TEXT(128),"image_tags" TEXT(255),"image_org_url" TEXT(255),' \
+        '"image_thumb_nail_url" TEXT(255),"image_category_id" TEXT(20),"image_state" TEXT(3) );'
     cursor.execute(create_table_script)
-    create_index_script = 'CREATE INDEX if not exists "idx_source_image_org_url" ON "store_resource_image" ("image_org_url" ASC );'
+    create_index_script = \
+        'CREATE INDEX if not exists "idx_source_image_org_url" ON "store_resource_image" ("image_org_url" ASC );'
     cursor.execute(create_index_script)
     # pass
 
@@ -108,8 +116,10 @@ def save_image_to_db(value_list):
     conn = get_mysql_connect()
     conn.text_factory = str  ##!!!
     cursor = conn.cursor()
-    # sql_insert = "insert into store_resource_image (image_org_url, image_alt, image_thumb_nail_url, image_category_id, image_state, image_tags) values (%s, %s, %s, %s, %s, %s)"
-    sql_insert = "insert into store_resource_image (image_org_url, image_alt, image_thumb_nail_url, image_category_id, image_state, image_tags) values (?,?,?,?,?,?)"
+    # sql_insert = "insert into store_resource_image (image_org_url, image_alt, image_thumb_nail_url,
+    # image_category_id, image_state, image_tags) values (%s, %s, %s, %s, %s, %s)"
+    sql_insert = "insert into store_resource_image (image_org_url, image_alt, image_thumb_nail_url, " \
+                 "image_category_id, image_state, image_tags) values (?,?,?,?,?,?) "
     try:
         exe_count = len(value_list)
         cursor.executemany(sql_insert, value_list)
@@ -149,7 +159,8 @@ def log_kit_error(msg):
 
 # 主函数入口
 if __name__ == '__main__':
-    logging.basicConfig(filename="logs_doutula.log", filemode="a", format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.INFO)
+    logging.basicConfig(filename="logs_doutula.log", filemode="a",
+                        format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.INFO)
     # get_image_list(base_url)
     create_tables()
     gen_all_page_url(2285, 3253)
