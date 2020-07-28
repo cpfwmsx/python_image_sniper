@@ -12,7 +12,7 @@ base_url = "https://www.doutula.com/photo/list/?page=1"
 # 带参数的模板地址，本地址为防止错误，使用http，非https
 base_url_template = "http://www.doutula.com/photo/list/?page=%d"
 # 数据库地址，此处为执行时的路径
-file_sqlite3_location = "doutula_images_data.db"
+file_sqlite3_location = "db/doutula_images_data.db"
 
 
 # 创建待解析的地址: 3253
