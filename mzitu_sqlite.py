@@ -70,7 +70,7 @@ class mzituImage:
                     # href = link.attr("href")
                     # print(link.html())
                     time.sleep(1)
-            self.saveImgToDb(imageList=imageList)
+            # self.saveImgToDb(imageList=imageList)
 
     def saveImgToDb(self, imageList):
         exeCount = 0
