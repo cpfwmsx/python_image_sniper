@@ -82,9 +82,9 @@ class mn5Image:
         startUrl = categoryUrl
         if "http" in startUrl:
             albumList = []
-            for i in range(pageNum, totalPage + 1):
+            for i in range(0, totalPage):
                 parseUrl = startUrl
-                if i != 1:
+                if i != 0:
                     parseUrl = startUrl + "page_" + str(i) + ".html"
                 print("parseUrl %s" % parseUrl)
                 doc = pq(url=parseUrl, time=10, headers=self.__httpHeader(), encoding="gbk")
@@ -130,15 +130,35 @@ class mn5Image:
             print("解析时间超时，程序退出 %s " % e)
             sys.exit(0)
 
+    # 根据相册状态查询相册数量
+    def countAlbumByAlbumState(self, albumState):
+        count = 0
+        conn = self.__get_sqlite_connect()
+        try:
+            # conn.text_factory = str ##!!!
+            cursor = conn.cursor()
+            sql = 'select count(*) from store_resource_album where album_state = %d ' % albumState
+            cursor.execute(sql)
+            result = cursor.fetchone()
+            count = result[0]
+        except DatabaseError as e:
+            print(e)
+        finally:
+            conn.close()
+        return count
+
     # 根据相册分析相册图片详细
-    def parseAlbumImagesByDb(self, albumId):
+    def parseAlbumImagesByDb(self, albumId, pageNum, pageSize):
         albumList = []
+        startLine = (pageNum - 1) * pageSize
+        if startLine < 0:
+            startLine = 0
         if albumId is None or albumId <= 0:
             print("未传入相册Id，开始爬取所有")
-            albumList = self.__selectAlbumByState(albumId=0, albumState=0, start=0, limit=1)
+            albumList = self.__selectAlbumByState(albumId=0, albumState=0, start=startLine, limit=pageSize)
         else:
             print(("爬取指定相册id %d") % albumId)
-            albumList = self.__selectAlbumByState(albumId=albumId, albumState=0, start=0, limit=5)
+            albumList = self.__selectAlbumByState(albumId=albumId, albumState=0, start=startLine, limit=pageSize)
         if len(albumList) == 0:
             print("相册暂无未处理的数据 albumState = %d" % 0)
         for album in albumList:
@@ -146,8 +166,8 @@ class mn5Image:
             albumOrgUrl = album[5]
             totalPage = self.__getAlbumImagePages(albumOrgUrl)
             startParseUrl = albumOrgUrl
-            for i in range(1, totalPage + 1):
-                if i > 1:
+            for i in range(0, totalPage):
+                if i > 0:
                     startParseUrl = albumOrgUrl.replace(".html", "") + "_" + str(i) + ".html"
                 print("startParseUrl %s" % startParseUrl)
                 doc = pq(url=startParseUrl, time=10, headers=self.__httpHeader(), encoding="gbk")
@@ -172,7 +192,7 @@ class mn5Image:
                 time.sleep(1)
             self.__updateAlbumStateByAlbumId(albumId=albumId, albumState=1)
 
-    # 根据相册状态查询集合
+    # 根据相册状态查询集合,如果指定了id则只查询单条相册
     def __selectAlbumByState(self, albumId, albumState, start, limit):
         albumList = []
         conn = self.__get_sqlite_connect()
@@ -181,8 +201,8 @@ class mn5Image:
             cursor = conn.cursor()
             sql = ''
             if albumId > 0:
-                sql = "select * from store_resource_album where album_id = %d and album_state = %d limit %d, %d" % (
-                albumId, albumState, start, limit)
+                sql = "select * from store_resource_album where album_id = %d and album_state = %d" % (
+                albumId, albumState)
             else:
                 sql = "select * from store_resource_album where album_state = %d limit %d, %d" % (
                 albumState, start, limit)
@@ -240,7 +260,8 @@ class mn5Image:
         conn = self.__get_sqlite_connect()
         try:
             cursor = conn.cursor()
-            sql = "update store_resource_album set album_state = %d where album_state = %d" % (albumState, albumId)
+            sql = "update store_resource_album set album_state = %d where album_id = %d" % (albumState, albumId)
+            print("update sql： %s" % sql)
             cursor.execute(sql)
             conn.commit()
         except DatabaseError as e:
@@ -340,7 +361,10 @@ if __name__ == '__main__':
     #     mn5.parseCategory(categoryUrl=categoryUrl, pageNum=1)
 
     # 只抓取指定第0个分类的相册，并将相册保存到数据库中
-    mn5.parseCategory(categoryUrl = mn5.categoryUrls[0], pageNum = 1)
+    # mn5.parseCategory(categoryUrl = mn5.categoryUrls[0], pageNum = 1)
 
     # 根据数据库中的相册，抓取所属相册的图片入库
-    # mn5.parseAlbumImagesByDb(albumId=101)
+    mn5.parseAlbumImagesByDb(albumId=102, pageNum=1, pageSize=5)
+    # 根据相册状态查询数量
+    # totalUnparseCount = mn5.countAlbumByAlbumState(albumState=0)
+    # print("数据库中尚未解析的相册数量：%d" % totalUnparseCount)
