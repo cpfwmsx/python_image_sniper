@@ -6,7 +6,13 @@ Solemnly declare that this project is only for learning, not for other purposes.
 The network grabbing technology in the project is not for the whole station crawling, and can not be directly used in production.
 
 #### Software Architecture
-develop base on python3
+In order to keep the program active, the websites captured are all funny words or pictures. The target sites are as follows:
+- [斗图啦](https://www.doutula.com/)
+- [多图网](https://www.duotoo.com/)
+- [美女屋](https://www.mn5.cc/)
+- [妹子图](https://www.mzitu.com/)
+
+In the future, more sites will be added
 
 #### Installation
 
