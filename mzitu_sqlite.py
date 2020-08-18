@@ -81,7 +81,7 @@ class mzituImage:
                         if exists is False:
                             albumList.append(albumDto)
                         else:
-                            logging.info(msg="数据已存在")
+                            logging.info(msg="数据已存在:" + imgSrc)
                     time.sleep(1)
                 self.__saveAlbumToDb(albumList=albumList)
 
@@ -125,6 +125,7 @@ class mzituImage:
             else:
                 url = albumUrl + "/" + str(i)
             self.__saveImageByAlbumAndUrl(albumId=albumId, docUrl=url)
+            time.sleep(0.5)
 
     # 指定相册id和图片dom单条保存图片
     def __saveImageByAlbumAndUrl(self, albumId, docUrl):
@@ -142,7 +143,7 @@ class mzituImage:
                 self.__saveImgToDb(imgDto)
                 print("指定图片已保存:" + src)
             else:
-                print("图片已存在，忽略")
+                print("图片已存在，忽略:" + src)
 
     # 根据数据状态查询指定数量的相册集合
     def __findAlbumByDataState(self, dataState, pageSize):
@@ -265,7 +266,6 @@ class mzituImage:
         conn.close()
         return ets
 
-
     # 判断指定地址在图片表中是否已经存在
     def exists_data_image(self, url):
         ets = False
@@ -288,4 +288,4 @@ if __name__ == '__main__':
     # for categoryUrl in mzitu.categoryUrls:
     #     mzitu.parseCategory(categoryUrl, 1)
     # mzitu.parseCategory(mzitu.categoryUrls[0], 1)
-    mzitu.parseImageByAlbum(pageSize=1)
+    mzitu.parseImageByAlbum(pageSize=10)
