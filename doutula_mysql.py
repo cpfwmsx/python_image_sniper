@@ -6,10 +6,10 @@ import pymysql
 base_url = "https://www.doutula.com/photo/list/?page=2"
 base_url_template = "https://www.doutula.com/photo/list/?page=%d"
 mysql_host = "192.168.1.4"
-mysql_username = "nicolas"
-mysql_password = "55ymd.COM"
+mysql_username = "username"
+mysql_password = "password"
 mysql_port = 3306
-mysql_schema = "site_store"
+mysql_schema = "image_store"
 
 
 # 创建待解析的地址

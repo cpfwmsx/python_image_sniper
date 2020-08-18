@@ -1,7 +1,9 @@
-# python图片狙击爬虫
+# python image sniper
 
 #### Description
-使用Python做网络资源抓取
+Use Python to grab network resources.
+Solemnly declare that this project is only for learning, not for other purposes.
+The network grabbing technology in the project is not for the whole station crawling, and can not be directly used in production.
 
 #### Software Architecture
 develop base on python3
